@@ -1,0 +1,136 @@
+{
+  "name": "My workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.message.text }}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        208,
+        0
+      ],
+      "id": "6b3d5c4c-f019-4cc4-81e5-f011ed4ee8e1",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "updates": [
+          "*"
+        ],
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -64,
+        0
+      ],
+      "id": "286db617-fed6-45cc-9fd3-55dd0e9faea0",
+      "name": "Telegram Trigger",
+      "webhookId": "c0b14918-4114-44c4-9827-30e08140f5c0",
+      "credentials": {
+        "telegramApi": {
+          "id": "ReO42XO0ZGrepSyI",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "text": "={{ $json.output }}",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        560,
+        0
+      ],
+      "id": "a7d76016-4b77-4ae9-8dad-2dfc4d34772e",
+      "name": "Send a text message",
+      "webhookId": "b856d789-b037-4ddc-9afd-4c80b185db8b",
+      "credentials": {
+        "telegramApi": {
+          "id": "ReO42XO0ZGrepSyI",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "=llama3.1:8b",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOllama",
+      "typeVersion": 1,
+      "position": [
+        80,
+        208
+      ],
+      "id": "bed3ba2c-0d1a-41f3-8800-ea2dcd2b9c81",
+      "name": "Ollama Chat Model",
+      "credentials": {
+        "ollamaApi": {
+          "id": "YoBDJoqgBfBX6liw",
+          "name": "Ollama account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Send a text message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ollama Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "3819686b-e545-464b-8ab7-f89f9a0e9812",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "c8a58918682f195c4af13b4bd0fdf2be0517041aa5b25152235ef7ad90e80b3e"
+  },
+  "id": "CWncEUMVg8IdjW8h",
+  "tags": []
+}
